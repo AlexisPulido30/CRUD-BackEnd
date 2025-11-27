@@ -11,11 +11,10 @@ export const sendEmail = async (to: string, subject: string, text: string) => {
 
   try {
     const transporter = nodemailer.createTransport({
-      host: "smtp.office365.com", 
-      port: 587,
-      secure: false, 
-      auth: { user, 
-              pass }
+      host: "smtp.gmail.com",
+      port: 465,        
+      secure: true,    
+      auth: { user, pass }
     });
 
     await transporter.sendMail({
