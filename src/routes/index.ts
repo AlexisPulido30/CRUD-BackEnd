@@ -5,6 +5,7 @@ import { handleInputErrors } from "../middlewares/validation";
 import { authenticate } from "../middlewares/auth";
 import { getUser, login } from "../controllers/authController";
 import { loginValidation } from "../validations/loginValidation";
+import { getAllUsers } from "../controllers/usersController";
 
 
 // Se crea una instancia
@@ -20,5 +21,8 @@ router.post("/auth/login", loginValidation, handleInputErrors, login);
 
 //Obtener usuaris logueado 
 router.get('/user', authenticate, getUser)
+
+//Obtener todos los usuarios
+router.get("/users", getAllUsers);
 
 export default router;
