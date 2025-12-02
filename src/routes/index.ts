@@ -8,6 +8,8 @@ import { loginValidation } from "../validations/loginValidation";
 import { getAllUsers } from "../controllers/usersController";
 import { deleteUser } from "../controllers/deleteUserController";
 import { deleteUserValidation } from "../validations/deleteValidation";
+import { updateUserValidation } from "../validations/editValidation";
+import { updateUser } from "../controllers/editController";
 
 
 // Se crea una instancia
@@ -30,5 +32,8 @@ router.get("/users", getAllUsers);
 //Eliminar Usuarios
 router.delete("/user/:id", authenticate, deleteUserValidation, handleInputErrors, deleteUser);
 
+
+//Editar Usuarios
+router.patch("/user/:id", authenticate, updateUserValidation, handleInputErrors, updateUser)
 
 export default router;
