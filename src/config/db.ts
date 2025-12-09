@@ -1,15 +1,14 @@
-// Importacion 
 import { PrismaClient } from "@prisma/client";
 
-// Crea una instancia de PrismaClient 
+//instancia 
 export const prisma = new PrismaClient();
 
-// Mi funcion para conectar la base de datos 
+//conexion 
 export const connectDB = async () => {
   try {
   
     await prisma.$connect();
-    console.log("Base de datos conectada ✔");
+    console.log("Base de datos conectada");
 
   } catch (error) {
 

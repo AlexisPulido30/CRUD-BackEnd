@@ -4,12 +4,9 @@ import { prisma } from "../config/db";
 
 export const getAllUsers = async (req: Request, res: Response) => {
   try {
+    const users = await prisma.user.findMany({ where: { activo: true }});
 
-    // Trae todos los usuarios
-    const users = await prisma.user.findMany(); 
-
-    // array de usuarios
-    res.json(users); 
+    res.json(users);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Error al obtener los usuarios" });

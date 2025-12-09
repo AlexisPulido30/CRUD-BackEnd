@@ -12,28 +12,19 @@ import { updateUserValidation } from "../validations/editValidation";
 import { updateUser } from "../controllers/editController";
 
 
-// Se crea una instancia
 const router = Router();
 
-
-// Esta es mi ruta raiz
 router.post("/register", registerValidation, handleInputErrors, registerUser);
 
-
-// LOGIN
 router.post("/auth/login", loginValidation, handleInputErrors, login);
 
-//Obtener usuaris logueado 
 router.get('/user', authenticate, getUser)
 
-//Obtener todos los usuarios
 router.get("/users", getAllUsers);
 
-//Eliminar Usuarios
-router.delete("/user/:id", authenticate, deleteUserValidation, handleInputErrors, deleteUser);
+router.delete("/user/:id", authenticate, deleteUserValidation, handleInputErrors, deleteUser)
 
-
-//Editar Usuarios
 router.patch("/user/:id", authenticate, updateUserValidation, handleInputErrors, updateUser)
+
 
 export default router;

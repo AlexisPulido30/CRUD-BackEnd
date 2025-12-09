@@ -23,5 +23,6 @@ model User {
   genero          String
   password        String
   createdAt       DateTime @default(now())
+  activo          Boolean  @default(true)
 
 }

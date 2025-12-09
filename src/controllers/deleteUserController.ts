@@ -1,15 +1,11 @@
-// controllers/userController.ts
 import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-
 export const deleteUser = async (req: Request, res: Response) => {
   const { id } = req.params;
-
   try {
-    // validar si existe
     const user = await prisma.user.findUnique({
       where: { id: Number(id) },
     });
@@ -18,8 +14,9 @@ export const deleteUser = async (req: Request, res: Response) => {
       return res.status(404).json({ error: "Usuario no encontrado" });
     }
 
-    await prisma.user.delete({
-     where: { id: Number(id) }
+    await prisma.user.update({
+     where: { id: Number(id) },
+     data: {activo:false}
     });
 
     return res.json({ message: "Usuario eliminado correctamente" });

@@ -1,5 +1,3 @@
-// genral contraseña aleatoria
-
 export const generatePassword = (length = 8) => {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()';
   let password = '';

@@ -8,17 +8,13 @@ export const registerUser = async (req: Request, res: Response) => {
   const { nombre, correo, telefono, fechaNacimiento, genero } = req.body;
 
   try {
-    // Verificar si el correo ya existe
+   
     const existingUser = await prisma.user.findUnique({ where: { correo } });
     if (existingUser) return res.status(409).json({ error: "Correo ya registrado" });
 
-    // Generar contraseña aleatoria
-    const generatedPassword = generatePassword();
-
-    // Hashear contraseña
+ 
+    const generatedPassword = generatePassword(); 
     const hashedPassword = await hashPassword(generatedPassword);
-
-    // Crear usuario
     const newUser = await prisma.user.create({
       data: {
         nombre,
@@ -30,14 +26,13 @@ export const registerUser = async (req: Request, res: Response) => {
       },
     });
 
-    // Enviar contraseña por correo
+  
     await sendEmail(
       correo,
       "Envio de contraseña",
       `Hola ${nombre}, tu contraseña es: ${generatedPassword}`
     );
 
-    // Respuesta
     res.status(201).json({
       id: newUser.id,
       nombre: newUser.nombre,

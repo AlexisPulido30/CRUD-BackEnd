@@ -1,7 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
 import { validationResult } from "express-validator";
 
-// Valida los datos de entrada antes de que lleguen al controlador
 export const handleInputErrors = (req: Request, res: Response, next: NextFunction) => {
   const errors = validationResult(req);
 
