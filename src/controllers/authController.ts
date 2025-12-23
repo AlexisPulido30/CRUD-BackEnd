@@ -25,6 +25,32 @@ export const login = async (req: Request, res: Response) => {
   return res.json({ token });
 };
 
-export const getUser = async (req: Request, res: Response) => {
-  res.json(req.user);
+export const getUser = async (req: any, res: Response) => {
+  try {
+    const userId = req.user?.id;
+    if (!userId) return res.status(401).json({ error: "No autorizado" });
+
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        nombre: true,
+        correo: true,
+        telefono: true,
+        fechaNacimiento: true,
+        genero: true,
+        createdAt: true,
+        activo: true,
+        role: { select: { id: true, nombre: true } },
+      },
+    });
+
+    if (!user) return res.status(404).json({ error: "Usuario no encontrado" });
+
+    return res.json(user);
+  } catch (e) {
+    console.error(e);
+    return res.status(500).json({ error: "Error al obtener usuario" });
+  }
 };
+
