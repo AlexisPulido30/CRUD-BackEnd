@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { generateJWT } from "../utils/jwt";
+import { AuthReq } from "../middlewares/requireAuth";
+
 
 const prisma = new PrismaClient();
 
@@ -25,7 +27,7 @@ export const login = async (req: Request, res: Response) => {
   return res.json({ token });
 };
 
-export const getUser = async (req: any, res: Response) => {
+export const getUser = async (req: AuthReq, res: Response) => {
   try {
     const userId = req.user?.id;
     if (!userId) return res.status(401).json({ error: "No autorizado" });
@@ -41,16 +43,31 @@ export const getUser = async (req: any, res: Response) => {
         genero: true,
         createdAt: true,
         activo: true,
-        role: { select: { id: true, nombre: true } },
+        role: {
+          select: {
+            id: true,
+            nombre: true,
+            permissions: { 
+              select: {
+                permission: { select: { nombre: true } 
+                }, 
+              },
+            },
+          },
+        },
       },
     });
 
     if (!user) return res.status(404).json({ error: "Usuario no encontrado" });
 
-    return res.json(user);
+    const permissions =
+      user.role?.permissions?.map((rp) => rp.permission.nombre) ?? [];
+
+    return res.json({ ...user, permissions });
   } catch (e) {
     console.error(e);
     return res.status(500).json({ error: "Error al obtener usuario" });
   }
 };
+
 
