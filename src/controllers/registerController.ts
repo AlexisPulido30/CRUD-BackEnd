@@ -17,7 +17,7 @@ export const registerUser = async (req: Request, res: Response) => {
       return res.status(409).json({ error: "Correo ya registrado" });
     }
 
-    // Rol por defecto (USER)
+    // Rol 
     const defaultRole = await prisma.role.findUnique({
       where: { nombre: "USER" },
       select: { id: true },
@@ -25,7 +25,7 @@ export const registerUser = async (req: Request, res: Response) => {
 
     if (!defaultRole) {
       return res.status(500).json({
-        error: 'No existe el rol "USER" en la BD. Crea el rol "USER" primero.',
+        error: 'No existe el rol',
       });
     }
 
@@ -33,7 +33,7 @@ export const registerUser = async (req: Request, res: Response) => {
     const generatedPassword = generatePassword();
     const hashedPassword = await hashPassword(generatedPassword);
 
-    // Crear usuario con rol por defecto
+
     const newUser = await prisma.user.create({
       data: {
         nombre,
@@ -57,7 +57,7 @@ export const registerUser = async (req: Request, res: Response) => {
       },
     });
 
-    // Enviar email con contraseña
+    
     await sendEmail(
       correo,
       "Envio de contraseña",

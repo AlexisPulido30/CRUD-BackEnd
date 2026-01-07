@@ -1,20 +1,39 @@
 import { Router } from "express";
-import { registerUser } from "../controllers/registerController";
-import { registerValidation } from "../validations/registerValidation";
-import { handleInputErrors } from "../middlewares/validation";
 import { requireAuth } from "../middlewares/requireAuth";
+import { requirePermission } from "../middlewares/requirePermission";
+import { handleInputErrors } from "../middlewares/validation";
+
+// controllers
+import { registerUser } from "../controllers/registerController";
 import { getUser, login } from "../controllers/authController";
-import { loginValidation } from "../validations/loginValidation";
 import { getAllUsers } from "../controllers/usersController";
 import { deleteUser } from "../controllers/deleteUserController";
+import { updateUser } from "../controllers/editController";
+import { updateMyProfile } from "../controllers/profileController";
+
+import {
+  getRoles,
+  getPermisos,
+  getRolePermissions,
+  setRolePermissions,
+} from "../controllers/rolesController";
+import { updateUserRole } from "../controllers/userRoleController";
+
+// validations
+import { registerValidation } from "../validations/registerValidation";
+import { loginValidation } from "../validations/loginValidation";
 import { deleteUserValidation } from "../validations/deleteValidation";
 import { updateUserValidation } from "../validations/editValidation";
-import { updateUser } from "../controllers/editController";
-import { requirePermission } from "../middlewares/requirePermission";
-import { updateMyProfile } from "../controllers/profileController";
+
+import {
+  roleIdParamValidation,
+  setRolePermissionsValidation,
+} from "../validations/rolesValidation";
+import { updateUserRoleValidation } from "../validations/userRoleValidation";
 
 const router = Router();
 
+// ===== autenticacion  =====
 router.post(
   "/register",
   requireAuth,
@@ -28,9 +47,6 @@ router.post("/auth/login", loginValidation, handleInputErrors, login);
 
 router.get("/user", requireAuth, getUser);
 
-router.get("/users", requireAuth, requirePermission("USER_READ"), getAllUsers);
-
-
 router.patch(
   "/user/me",
   requireAuth,
@@ -38,6 +54,8 @@ router.patch(
   updateMyProfile
 );
 
+// ===== usuarios =====
+router.get("/users", requireAuth, requirePermission("USER_READ"), getAllUsers);
 
 router.delete(
   "/user/:id",
@@ -55,6 +73,44 @@ router.patch(
   updateUserValidation,
   handleInputErrors,
   updateUser
+);
+
+// ===== ADMIN roles ypermisos =====
+router.get("/roles", requireAuth, requirePermission("ROLE_MANAGE"), getRoles);
+
+router.get(
+  "/permissions",
+  requireAuth,
+  requirePermission("ROLE_MANAGE"),
+  getPermisos
+);
+
+router.get(
+  "/roles/:id/permissions",
+  requireAuth,
+  requirePermission("ROLE_MANAGE"),
+  roleIdParamValidation,
+  handleInputErrors,
+  getRolePermissions
+);
+
+router.put(
+  "/roles/:id/permissions",
+  requireAuth,
+  requirePermission("ROLE_MANAGE"),
+  setRolePermissionsValidation,
+  handleInputErrors,
+  setRolePermissions
+);
+
+// ===== ADMIN: Asignar rol a usuario =====
+router.patch(
+  "/user/:id/role",
+  requireAuth,
+  requirePermission("ROLE_MANAGE"), 
+  updateUserRoleValidation,
+  handleInputErrors,
+  updateUserRole
 );
 
 export default router;
