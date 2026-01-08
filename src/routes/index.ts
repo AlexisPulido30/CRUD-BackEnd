@@ -34,6 +34,14 @@ import { updateUserRoleValidation } from "../validations/userRoleValidation";
 const router = Router();
 
 // ===== autenticacion  =====
+
+router.post(
+  "/auth/register",
+  registerValidation,
+  handleInputErrors,
+  registerUser
+);
+
 router.post(
   "/register",
   requireAuth,
